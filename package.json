@@ -20,7 +20,7 @@
   "config": {
     "exportAliases": {
       "node": "./dist/node",
-      "web": "./dist/web"
+      "browser": "./dist/browser"
     }
   },
   "repository": {
