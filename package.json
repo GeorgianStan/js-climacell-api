@@ -1,10 +1,7 @@
 {
   "name": "js-climacell-api",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "A wrapper for ClimaCell available to be used in both browser and node js environments",
-  "files": [
-    "dist"
-  ],
   "scripts": {
     "expose": "generate-export-aliases",
     "start:dev": "webpack --mode=development --watch --progress",
