@@ -1,9 +1,9 @@
 {
   "name": "js-climacell-api",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "A wrapper for ClimaCell available to be used in both browser and node js environments",
   "scripts": {
-    "expose": "generate-export-aliases",
+    "expose": "node unwrap.js",
     "start:dev": "webpack --mode=development --watch --progress",
     "build:prod": "webpack --mode=production",
     "prepublishOnly": "webpack --mode=production && npm run expose",
@@ -13,12 +13,6 @@
     "test": "jest",
     "test:watch": "jest --watch",
     "test:cov": "jest --coverage"
-  },
-  "config": {
-    "exportAliases": {
-      "node": "./dist/node",
-      "browser": "./dist/browser"
-    }
   },
   "repository": {
     "type": "git",
@@ -44,7 +38,6 @@
     "eslint": "^7.18.0",
     "eslint-config-prettier": "^7.2.0",
     "eslint-plugin-prettier": "^3.3.1",
-    "generate-export-aliases": "^1.1.0",
     "jest": "^26.6.3",
     "prettier": "^2.2.1",
     "ts-jest": "^26.4.4",
