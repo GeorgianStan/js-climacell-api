@@ -34,9 +34,7 @@ const nodeConfig = {
   output: {
     path: path.resolve(__dirname, './dist'),
     filename: 'node.js',
-    library: 'ClimaCellAPI',
     libraryTarget: 'umd',
-    umdNamedDefine: true,
     libraryExport: 'default',
   },
 };
@@ -47,10 +45,8 @@ const browserConfig = {
   output: {
     path: path.resolve(__dirname, './dist'),
     filename: 'browser.js',
-    library: 'ClimaCellAPI',
     libraryTarget: 'umd',
     globalObject: 'this',
-    umdNamedDefine: true,
     libraryExport: 'default',
   },
 };

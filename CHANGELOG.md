@@ -1,3 +1,3 @@
 # Changelog
 
-All notable changes to this back-end-cli will be documented in this file.
+All notable changes to this module will be documented in this file.
