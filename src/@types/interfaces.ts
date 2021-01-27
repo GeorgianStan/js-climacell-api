@@ -5,8 +5,8 @@ export interface KeyValuePair {
 }
 
 export interface Availability {
-  start?: string;
-  end?: string;
+  start?: string | number;
+  end?: string | number;
 }
 
 export interface TimelinesOptions {
