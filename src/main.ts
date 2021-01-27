@@ -15,11 +15,16 @@ import { QueryBuilderOptions } from './util/@types/interface';
  */
 import { UtilService } from './util/util.service';
 
+/**
+ * * Validators
+ */
+import { availabilityValidator } from './validators/timeline-availability.validator';
+
 export class Main {
   /**
    * * Static fields
    */
-  static async getWeatherData(fetchMethod: any, options: QueryBuilderOptions) {
+  static async requestData(fetchMethod: any, options: QueryBuilderOptions) {
     const url = UtilService.queryBuilder(
       'https://data.climacell.co/v4/timelines',
       options,
@@ -47,25 +52,27 @@ export class Main {
    * * getData()
    * ? general method to be used in order to retrieve data
    * @param fields - field to get data for
-   * @param timestep - current,1m,5m,15m,30m,1h,1d
+   * @param timesteps - current,1m,5m,15m,30m,1h,1d
    * @param unit - SI or American Custom Units
    * @param availability - time interval
    */
   #getData = async (
-    timestep: TimeStepValues,
+    timesteps: TimeStepValues,
     options: TimelinesOptions,
   ): Promise<any> => {
     const {
       fields,
       availability,
-      unit,
+      units,
       timezone,
     }: {
       fields?: string[];
       availability?: Availability;
-      unit?: UnitType;
+      units?: UnitType;
       timezone?: string;
     } = options;
+
+    availability && availabilityValidator(availability);
 
     const now: number = timezone
       ? new Date(
@@ -77,15 +84,16 @@ export class Main {
 
     const startTime: string =
       availability?.start &&
-      new Date(now + ms(availability.start)).toISOString();
+      new Date(now + ms(String(availability?.start))).toISOString();
 
     const endTime: string =
-      availability?.end && new Date(now + ms(availability.end)).toISOString();
+      availability?.end &&
+      new Date(now + ms(String(availability?.end))).toISOString();
 
     const url = UtilService.queryBuilder(this.#baseURL, {
-      timestep,
+      timesteps,
       fields,
-      unit,
+      units,
       startTime,
       endTime,
       apikey: this.#apiKey,

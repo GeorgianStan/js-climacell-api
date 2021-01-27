@@ -3,6 +3,9 @@
  */
 import { Main } from './main';
 
+/**
+ * * Mock fetch
+ */
 jest.mock('node-fetch');
 
 import fetch from 'node-fetch';
@@ -41,7 +44,7 @@ describe('Unit Tests', () => {
 
   describe('static getWeatherData()', () => {
     it('Should make a request to the correct URL', async () => {
-      await Main.getWeatherData(require('node-fetch'), {
+      await Main.requestData(require('node-fetch'), {
         apikey: '23',
         location: `1.2%2C2.2`,
         fields: ['temperature', 'humidity'],
@@ -73,12 +76,12 @@ describe('Unit Tests', () => {
       expect(fetch).toHaveBeenCalledTimes(3);
       expect(fetch).toHaveBeenNthCalledWith(
         1,
-        'https://data.climacell.co/v4/timelines?timestep=current&fields=temperature&apikey=myKEy12&location=12,11',
+        'https://data.climacell.co/v4/timelines?timesteps=current&fields=temperature&apikey=myKEy12&location=12,11',
       );
 
       expect(fetch).toHaveBeenNthCalledWith(
         2,
-        `https://data.climacell.co/v4/timelines?timestep=current&fields=temperature&startTime=${new Date(
+        `https://data.climacell.co/v4/timelines?timesteps=current&fields=temperature&startTime=${new Date(
           NOW - ONE_HOUR_IN_MS,
         ).toISOString()}&endTime=${new Date(
           NOW + ONE_HOUR_IN_MS,
@@ -93,11 +96,43 @@ describe('Unit Tests', () => {
 
       expect(fetch).toHaveBeenNthCalledWith(
         3,
-        `https://data.climacell.co/v4/timelines?timestep=current&fields=temperature&startTime=${new Date(
+        `https://data.climacell.co/v4/timelines?timesteps=current&fields=temperature&startTime=${new Date(
           timezoneStart - ONE_HOUR_IN_MS,
         ).toISOString()}&endTime=${new Date(
           timezoneStart + ONE_HOUR_IN_MS * 2,
         ).toISOString()}&apikey=myKEy12&location=12,11&timezone=Africa/Abidjan`,
+      );
+    });
+  });
+
+  describe('Availability as a number', () => {
+    it('If availability is not a string, but a number then it should be treated as a timestamp', async () => {
+      jest.spyOn(Date, 'now').mockImplementation(() => NOW);
+
+      await instance.perMinute({
+        fields: ['temperature'],
+        availability: { start: -1000 * 60 },
+      });
+
+      expect(fetch).toHaveBeenCalledWith(
+        `https://data.climacell.co/v4/timelines?timesteps=1m&fields=temperature&startTime=${new Date(
+          NOW - 1000 * 60,
+        ).toISOString()}&apikey=myKEy12&location=12,11`,
+      );
+    });
+
+    it('If availability is a number as a string, then it should be treated as a timestamp', async () => {
+      jest.spyOn(Date, 'now').mockImplementation(() => NOW);
+
+      await instance.perMinute({
+        fields: ['temperature'],
+        availability: { start: String(-1000 * 60) },
+      });
+
+      expect(fetch).toHaveBeenCalledWith(
+        `https://data.climacell.co/v4/timelines?timesteps=1m&fields=temperature&startTime=${new Date(
+          NOW - 1000 * 60,
+        ).toISOString()}&apikey=myKEy12&location=12,11`,
       );
     });
   });
@@ -109,7 +144,7 @@ describe('Unit Tests', () => {
       expect(fetch).toHaveBeenCalledTimes(1);
       expect(fetch).toHaveBeenNthCalledWith(
         1,
-        'https://data.climacell.co/v4/timelines?timestep=current&fields=temperature&apikey=myKEy12&location=12,11',
+        'https://data.climacell.co/v4/timelines?timesteps=current&fields=temperature&apikey=myKEy12&location=12,11',
       );
     });
   });
@@ -121,7 +156,7 @@ describe('Unit Tests', () => {
       expect(fetch).toHaveBeenCalledTimes(1);
       expect(fetch).toHaveBeenNthCalledWith(
         1,
-        'https://data.climacell.co/v4/timelines?timestep=1m&fields=temperature&apikey=myKEy12&location=12,11',
+        'https://data.climacell.co/v4/timelines?timesteps=1m&fields=temperature&apikey=myKEy12&location=12,11',
       );
     });
   });
@@ -133,7 +168,7 @@ describe('Unit Tests', () => {
       expect(fetch).toHaveBeenCalledTimes(1);
       expect(fetch).toHaveBeenNthCalledWith(
         1,
-        'https://data.climacell.co/v4/timelines?timestep=5m&fields=temperature&apikey=myKEy12&location=12,11',
+        'https://data.climacell.co/v4/timelines?timesteps=5m&fields=temperature&apikey=myKEy12&location=12,11',
       );
     });
   });
@@ -145,7 +180,7 @@ describe('Unit Tests', () => {
       expect(fetch).toHaveBeenCalledTimes(1);
       expect(fetch).toHaveBeenNthCalledWith(
         1,
-        'https://data.climacell.co/v4/timelines?timestep=15m&fields=temperature&apikey=myKEy12&location=12,11',
+        'https://data.climacell.co/v4/timelines?timesteps=15m&fields=temperature&apikey=myKEy12&location=12,11',
       );
     });
   });
@@ -157,7 +192,7 @@ describe('Unit Tests', () => {
       expect(fetch).toHaveBeenCalledTimes(1);
       expect(fetch).toHaveBeenNthCalledWith(
         1,
-        'https://data.climacell.co/v4/timelines?timestep=30m&fields=temperature&apikey=myKEy12&location=12,11',
+        'https://data.climacell.co/v4/timelines?timesteps=30m&fields=temperature&apikey=myKEy12&location=12,11',
       );
     });
   });
@@ -169,7 +204,7 @@ describe('Unit Tests', () => {
       expect(fetch).toHaveBeenCalledTimes(1);
       expect(fetch).toHaveBeenNthCalledWith(
         1,
-        'https://data.climacell.co/v4/timelines?timestep=1h&fields=temperature&apikey=myKEy12&location=12,11',
+        'https://data.climacell.co/v4/timelines?timesteps=1h&fields=temperature&apikey=myKEy12&location=12,11',
       );
     });
   });
@@ -181,7 +216,7 @@ describe('Unit Tests', () => {
       expect(fetch).toHaveBeenCalledTimes(1);
       expect(fetch).toHaveBeenNthCalledWith(
         1,
-        'https://data.climacell.co/v4/timelines?timestep=1d&fields=temperature&apikey=myKEy12&location=12,11',
+        'https://data.climacell.co/v4/timelines?timesteps=1d&fields=temperature&apikey=myKEy12&location=12,11',
       );
     });
   });

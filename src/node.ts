@@ -13,8 +13,8 @@ export default class ClimaCellAPI extends Main {
   /**
    * * Static fields
    */
-  static async getWeatherData(options: QueryBuilderOptions) {
-    return super.getWeatherData(require('node-fetch'), options);
+  static async requestData(options: QueryBuilderOptions) {
+    return super.requestData(require('node-fetch'), options);
   }
 
   constructor(apiKey: string, coordinates: GeoCoordinates) {

@@ -12,6 +12,6 @@ export interface Availability {
 export interface TimelinesOptions {
   fields: string[];
   availability?: Availability;
-  unit?: UnitType;
+  units?: UnitType;
   timezone?: string;
 }
