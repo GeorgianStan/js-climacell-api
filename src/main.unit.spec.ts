@@ -1,14 +1,23 @@
 /**
  * * Test Target
  */
-import ClimaCellAPI from './node';
+import { Main } from './main';
 
 jest.mock('node-fetch');
 
 import fetch from 'node-fetch';
 
 describe('Unit Tests', () => {
-  afterAll(() => {
+  const API_KEY = 'myKEy12';
+  const LAT = '12';
+  const LON = '11';
+
+  const ONE_HOUR_IN_MS = 3.6e6;
+  const NOW: number = Date.now();
+
+  const instance = new Main(require('node-fetch'), API_KEY, [LAT, LON]);
+
+  afterEach(() => {
     jest.clearAllMocks();
   });
 
@@ -24,7 +33,7 @@ describe('Unit Tests', () => {
   describe('constructor', () => {
     // *
     it('It should instantiate the object', async () => {
-      const instance = new ClimaCellAPI('', ['', '']);
+      const instance = new Main(require('node-fetch'), '', ['', '']);
 
       expect(instance).toBeDefined();
     });
@@ -32,7 +41,7 @@ describe('Unit Tests', () => {
 
   describe('static getWeatherData()', () => {
     it('Should make a request to the correct URL', async () => {
-      await ClimaCellAPI.getWeatherData({
+      await Main.getWeatherData(require('node-fetch'), {
         apikey: '23',
         location: `1.2%2C2.2`,
         fields: ['temperature', 'humidity'],
@@ -41,6 +50,138 @@ describe('Unit Tests', () => {
       expect(fetch).toHaveBeenCalledTimes(1);
       expect(fetch).toHaveBeenCalledWith(
         'https://data.climacell.co/v4/timelines?apikey=23&location=1.2%2C2.2&fields=temperature&fields=humidity',
+      );
+    });
+  });
+
+  describe('Complex data format', () => {
+    it('Should make a request to the correct URL when star,end and timezones are provided', async () => {
+      const timezone = 'Africa/Abidjan';
+      jest.spyOn(Date, 'now').mockImplementation(() => NOW);
+
+      await instance.current({ fields: ['temperature'] });
+      await instance.current({
+        fields: ['temperature'],
+        availability: { start: '-1h', end: '1h' },
+      });
+      await instance.current({
+        fields: ['temperature'],
+        availability: { start: '-1h', end: '2h' },
+        timezone,
+      });
+
+      expect(fetch).toHaveBeenCalledTimes(3);
+      expect(fetch).toHaveBeenNthCalledWith(
+        1,
+        'https://data.climacell.co/v4/timelines?timestep=current&fields=temperature&apikey=myKEy12&location=12,11',
+      );
+
+      expect(fetch).toHaveBeenNthCalledWith(
+        2,
+        `https://data.climacell.co/v4/timelines?timestep=current&fields=temperature&startTime=${new Date(
+          NOW - ONE_HOUR_IN_MS,
+        ).toISOString()}&endTime=${new Date(
+          NOW + ONE_HOUR_IN_MS,
+        ).toISOString()}&apikey=myKEy12&location=12,11`,
+      );
+
+      const timezoneStart: number = new Date(
+        new Date(Date.now()).toLocaleString('en-US', {
+          timeZone: timezone,
+        }),
+      ).getTime();
+
+      expect(fetch).toHaveBeenNthCalledWith(
+        3,
+        `https://data.climacell.co/v4/timelines?timestep=current&fields=temperature&startTime=${new Date(
+          timezoneStart - ONE_HOUR_IN_MS,
+        ).toISOString()}&endTime=${new Date(
+          timezoneStart + ONE_HOUR_IN_MS * 2,
+        ).toISOString()}&apikey=myKEy12&location=12,11&timezone=Africa/Abidjan`,
+      );
+    });
+  });
+
+  describe('current()', () => {
+    it('Should make a request to the correct URL', async () => {
+      await instance.current({ fields: ['temperature'] });
+
+      expect(fetch).toHaveBeenCalledTimes(1);
+      expect(fetch).toHaveBeenNthCalledWith(
+        1,
+        'https://data.climacell.co/v4/timelines?timestep=current&fields=temperature&apikey=myKEy12&location=12,11',
+      );
+    });
+  });
+
+  describe('perMinute()', () => {
+    it('Should make a request to the correct URL', async () => {
+      await instance.perMinute({ fields: ['temperature'] });
+
+      expect(fetch).toHaveBeenCalledTimes(1);
+      expect(fetch).toHaveBeenNthCalledWith(
+        1,
+        'https://data.climacell.co/v4/timelines?timestep=1m&fields=temperature&apikey=myKEy12&location=12,11',
+      );
+    });
+  });
+
+  describe('per5Minutes()', () => {
+    it('Should make a request to the correct URL', async () => {
+      await instance.per5Minutes({ fields: ['temperature'] });
+
+      expect(fetch).toHaveBeenCalledTimes(1);
+      expect(fetch).toHaveBeenNthCalledWith(
+        1,
+        'https://data.climacell.co/v4/timelines?timestep=5m&fields=temperature&apikey=myKEy12&location=12,11',
+      );
+    });
+  });
+
+  describe('per15Minutes()', () => {
+    it('Should make a request to the correct URL', async () => {
+      await instance.per15Minutes({ fields: ['temperature'] });
+
+      expect(fetch).toHaveBeenCalledTimes(1);
+      expect(fetch).toHaveBeenNthCalledWith(
+        1,
+        'https://data.climacell.co/v4/timelines?timestep=15m&fields=temperature&apikey=myKEy12&location=12,11',
+      );
+    });
+  });
+
+  describe('per30Minutes()', () => {
+    it('Should make a request to the correct URL', async () => {
+      await instance.per30Minutes({ fields: ['temperature'] });
+
+      expect(fetch).toHaveBeenCalledTimes(1);
+      expect(fetch).toHaveBeenNthCalledWith(
+        1,
+        'https://data.climacell.co/v4/timelines?timestep=30m&fields=temperature&apikey=myKEy12&location=12,11',
+      );
+    });
+  });
+
+  describe('perHour()', () => {
+    it('Should make a request to the correct URL', async () => {
+      await instance.perHour({ fields: ['temperature'] });
+
+      expect(fetch).toHaveBeenCalledTimes(1);
+      expect(fetch).toHaveBeenNthCalledWith(
+        1,
+        'https://data.climacell.co/v4/timelines?timestep=1h&fields=temperature&apikey=myKEy12&location=12,11',
+      );
+    });
+  });
+
+  describe('perDay()', () => {
+    it('Should make a request to the correct URL', async () => {
+      await instance.perDay({ fields: ['temperature'] });
+
+      expect(fetch).toHaveBeenCalledTimes(1);
+      expect(fetch).toHaveBeenNthCalledWith(
+        1,
+        'https://data.climacell.co/v4/timelines?timestep=1d&fields=temperature&apikey=myKEy12&location=12,11',
       );
     });
   });
