@@ -1,5 +1,13 @@
 # js-climacell-api
 
+<div style='text-align:center'>
+    <img src='https://img.shields.io/github/issues/GeorgianStan/js-climacell-api' alt='issues'>
+    <img src='https://img.shields.io/github/forks/GeorgianStan/js-climacell-api' alt='forks'>
+    <img src='https://img.shields.io/github/stars/GeorgianStan/js-climacell-api' alt='stars'>
+    <img src='https://img.shields.io/github/license/GeorgianStan/js-climacell-api' alt='license'>
+    <img src='https://img.shields.io/github/package-json/v/GeorgianStan/js-climacell-api?color=%237146f9&logo=javascript' alt='version'>
+</div>
+
 `js-climacell-api` is a JavaScript wrapper around the [ClimaCell API](https://docs.climacell.co/reference/api-overview) (v4)
 that can be used in both NodeJS and Browser environments
 

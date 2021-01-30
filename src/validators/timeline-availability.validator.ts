@@ -16,7 +16,7 @@ const defaultErr: Error = new Error(
 const availabilityValidator = (
   availability: Availability,
   customErr?: Error,
-) => {
+): void | never => {
   try {
     const keys: string[] = Object.keys(availability);
 

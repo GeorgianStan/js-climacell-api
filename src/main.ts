@@ -24,7 +24,10 @@ export class Main {
   /**
    * * Static fields
    */
-  static async requestData(fetchMethod: any, options: QueryBuilderOptions) {
+  static async requestData(
+    fetchMethod: any,
+    options: QueryBuilderOptions,
+  ): Promise<any> {
     const url = UtilService.queryBuilder(
       'https://data.climacell.co/v4/timelines',
       options,
@@ -36,7 +39,7 @@ export class Main {
   /**
    * * Private fields
    */
-  #baseURL: string = 'https://data.climacell.co/v4/timelines';
+  #baseURL = 'https://data.climacell.co/v4/timelines';
 
   #fetch: any;
   #apiKey: string;

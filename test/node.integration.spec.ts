@@ -1,21 +1,17 @@
 /**
- * * Dependencies
- */
-import { parse } from 'dotenv';
-import * as path from 'path';
-import * as fs from 'fs';
-
-/**
  * * Test Target
  */
 import ClimaCellAPI from '../src/node';
 import { UnitType } from '../src/@types/enum';
 
-// * Config
-const CONFIG = parse(fs.readFileSync(path.resolve(process.cwd(), '.env.test')));
+const API_KEY = process.env.API_KEY.trim();
+
+if (!API_KEY) {
+  throw Error('Please provice API_KEY as env variable');
+}
 
 describe('Node Library Integration Test', () => {
-  const homeTownMonitor: ClimaCellAPI = new ClimaCellAPI(CONFIG.API_KEY, [
+  const homeTownMonitor: ClimaCellAPI = new ClimaCellAPI(API_KEY, [
     '45.6427',
     '25.5887',
   ]);
@@ -23,7 +19,7 @@ describe('Node Library Integration Test', () => {
   it('static method should be able to retrieve the data', async () => {
     const res = await ClimaCellAPI.requestData({
       location: '45.6427,25.5887',
-      apikey: CONFIG.API_KEY,
+      apikey: API_KEY,
       fields: ['temperature'],
     });
 
