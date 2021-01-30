@@ -34,7 +34,7 @@ To use it browser, you need to use the code from `browser.js` file.
 or via CDN
 
 ```html
-<script src="https://unpkg.com/browse/js-climacell-api@X.Y.Z/browser.js"></script>
+<script src="https://unpkg.com/js-climacell-api@X.Y.Z/browser.js"></script>
 ```
 
 Where `X.Y.Z` represents the library version.
