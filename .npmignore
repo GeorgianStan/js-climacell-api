@@ -8,6 +8,10 @@ webpack.config.js
 
 # files
 *.log
+unwrap.js
+
+# env 
+.env.test
 
 # tests
 test

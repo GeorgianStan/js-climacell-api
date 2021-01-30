@@ -16,7 +16,7 @@ module.exports = {
     node: true,
     jest: true,
   },
-  ignorePatterns: ['test/**/*'],
+  ignorePatterns: ['test/**/*', 'src/**/*.spec.ts'],
   rules: {
     '@typescript-eslint/interface-name-prefix': 'off',
     '@typescript-eslint/explicit-function-return-type': 'off',
@@ -24,5 +24,6 @@ module.exports = {
     'no-console': 1,
     'no-debugger': 1,
     '@typescript-eslint/no-var-requires': 0,
+    '@typescript-eslint/ban-ts-comment': 'off',
   },
 };

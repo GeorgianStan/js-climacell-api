@@ -9,6 +9,9 @@
 # dist
 /dist
 
+# env 
+.env.test
+
 # test
 coverage
 

@@ -4,5 +4,5 @@ module.exports = {
   testPathIgnorePatterns: ['/node_modules/', '.git', '/dist/'],
   setupFiles: ['./setupJest.ts'],
   automock: false,
-  collectCoverageFrom: ['dist/*.js'],
+  collectCoverageFrom: ['src/**/*.ts'],
 };
