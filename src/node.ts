@@ -13,7 +13,7 @@ export default class ClimaCellAPI extends Main {
   /**
    * * Static fields
    */
-  static async requestData(options: QueryBuilderOptions) {
+  static async requestData(options: QueryBuilderOptions): Promise<any> {
     return super.requestData(require('node-fetch'), options);
   }
 
